@@ -7,7 +7,15 @@ let courses  = [
     {id:3 , name:"python"}
 ]
 
+function logger(req,res,next){
+    console.log(req.ip);
+    console.log(req.hostname);
+    console.log(new Date().toString());
+    next();
+}
+
 app.use(express.json());
+app.use(logger);
 
 app.get('/courses' , (req,res)=>{
     res.json(courses);
@@ -25,9 +33,9 @@ app.post('/courses' , (req,res)=>{
 app.put('/courses/:id' , (req,res)=>{
     const ID = req.params.id;
 
-    let course = courses.find(course => course.id === ID);
+    let course = courses.find(course => course.id == ID);
 
-    if(!course){
+    if(course==null){
         res.send("course not found");
     }
     else{
@@ -37,8 +45,7 @@ app.put('/courses/:id' , (req,res)=>{
 })
 
 app.delete('/courses/:id' , (req,res)=>{
-    const ID = req.params.id;
-
+    const ID = parseInt(req.params.id);
     courses = courses.filter(course => course.id !== ID)
     res.send(courses);
 })
